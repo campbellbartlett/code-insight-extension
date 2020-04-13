@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.mergecheck;
+package io.github.campbellbartlett.codeinsightextension;
 
 import com.atlassian.bitbucket.codeinsights.report.GetInsightReportRequest;
 import com.atlassian.bitbucket.codeinsights.report.InsightReport;
@@ -21,7 +21,7 @@ public class InsightReportStatusService {
         this.insightReportService = insightReportService;
     }
 
-    InsightReportStatus getResultForPullRequestInsight(PullRequest pullRequest, String insightKey) {
+    public InsightReportStatus getResultForPullRequestInsight(PullRequest pullRequest, String insightKey) {
         GetInsightReportRequest insightReportRequest = new GetInsightReportRequest.Builder(pullRequest, insightKey).build();
         Optional<InsightReport> optionalInsight = insightReportService.get(insightReportRequest);
 

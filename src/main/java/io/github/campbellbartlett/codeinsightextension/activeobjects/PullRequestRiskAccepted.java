@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.mergecheck.activeobjects;
+package io.github.campbellbartlett.codeinsightextension.activeobjects;
 
 import net.java.ao.Entity;
 import net.java.ao.schema.Table;

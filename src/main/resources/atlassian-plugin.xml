@@ -10,12 +10,25 @@
   </plugin-info>
 
   <ao key="ao-module"> 
-    <description>The module configuring the Active Objects service used by this plugin</description>  
-    <entity>io.github.campbellbartlett.mergecheck.activeobjects.PullRequestRiskAccepted</entity> 
+    <description>The module configuring the Active Objects service used by the Code Insight Extension Plugin</description>
+    <entity>io.github.campbellbartlett.codeinsightextension.activeobjects.PullRequestRiskAccepted</entity>
   </ao>
 
-  <repository-merge-check key="insightMergeChecks" class="bean:pullRequestMergeCheckService" configurable="false"/>
+  <repository-merge-check
+          key="insightMergeChecks"
+          class="bean:pullRequestMergeCheckService"
+          configurable="false">
+    <description>Allows the Code Insight Extension plugin to read from Active Objects created in the Code Insight Extension 'ao-module'</description>
+  </repository-merge-check>
 
   <resource type="i18n" name="i18n" location="${atlassian.plugin.key}"/>
+
+  <rest name="Code Insight Extensions Rest Resources"
+        i18n-name-key="code-insight-extension-rest-resource.name"
+        key="code-insight-extension-resource"
+        path="/code-insight-extension"
+        version="1.0">
+    <description key="code-insight-extension-rest-resource.description">The Rest Resources used by the Code Insight Extension plugin</description>
+  </rest>
 
 </atlassian-plugin>

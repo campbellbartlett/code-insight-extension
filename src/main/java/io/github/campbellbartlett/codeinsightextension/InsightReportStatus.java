@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.mergecheck;
+package io.github.campbellbartlett.codeinsightextension;
 
 public enum InsightReportStatus {
     PASS,

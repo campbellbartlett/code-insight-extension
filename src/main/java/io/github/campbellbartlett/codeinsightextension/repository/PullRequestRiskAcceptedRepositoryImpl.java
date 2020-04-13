@@ -1,8 +1,8 @@
-package io.github.campbellbartlett.mergecheck.repository;
+package io.github.campbellbartlett.codeinsightextension.repository;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import io.github.campbellbartlett.mergecheck.activeobjects.PullRequestRiskAccepted;
+import io.github.campbellbartlett.codeinsightextension.activeobjects.PullRequestRiskAccepted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

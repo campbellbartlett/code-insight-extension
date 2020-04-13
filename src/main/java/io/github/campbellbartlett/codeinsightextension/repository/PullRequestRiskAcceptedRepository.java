@@ -1,7 +1,7 @@
-package io.github.campbellbartlett.mergecheck.repository;
+package io.github.campbellbartlett.codeinsightextension.repository;
 
 import com.atlassian.activeobjects.tx.Transactional;
-import io.github.campbellbartlett.mergecheck.activeobjects.PullRequestRiskAccepted;
+import io.github.campbellbartlett.codeinsightextension.activeobjects.PullRequestRiskAccepted;
 
 import java.util.Date;
 import java.util.List;

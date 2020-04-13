@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.mergecheck;
+package io.github.campbellbartlett.codeinsightextension;
 
 import com.atlassian.bitbucket.permission.Permission;
 import com.atlassian.bitbucket.permission.PermissionService;
@@ -6,8 +6,8 @@ import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.user.UserService;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import io.github.campbellbartlett.mergecheck.activeobjects.PullRequestRiskAccepted;
-import io.github.campbellbartlett.mergecheck.repository.PullRequestRiskAcceptedRepository;
+import io.github.campbellbartlett.codeinsightextension.activeobjects.PullRequestRiskAccepted;
+import io.github.campbellbartlett.codeinsightextension.repository.PullRequestRiskAcceptedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ import java.util.Objects;
 
 @Component("adminRiskAcceptedService")
 public class AdminRiskAcceptedService {
+
     // External components
     private final UserService userService;
     private final PermissionService permissionService;

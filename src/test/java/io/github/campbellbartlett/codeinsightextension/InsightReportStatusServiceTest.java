@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.mergecheck;
+package io.github.campbellbartlett.codeinsightextension;
 
 import com.atlassian.bitbucket.codeinsights.report.InsightReport;
 import com.atlassian.bitbucket.codeinsights.report.InsightReportService;
