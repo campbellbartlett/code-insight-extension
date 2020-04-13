@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2"> 
+  <plugin-info> 
+    <description>${project.description}</description>  
+    <version>${project.version}</version>  
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>  
+    <param name="plugin-icon">images/pluginIcon.png</param>  
+    <param name="plugin-logo">images/pluginLogo.png</param> 
+  </plugin-info>
+
+  <ao key="ao-module"> 
+    <description>The module configuring the Active Objects service used by this plugin</description>  
+    <entity>io.github.campbellbartlett.mergecheck.activeobjects.PullRequestRiskAccepted</entity> 
+  </ao>
+
+  <repository-merge-check key="insightMergeChecks" class="bean:pullRequestMergeCheckService" configurable="false"/>
+
+  <resource type="i18n" name="i18n" location="${atlassian.plugin.key}"/>
+
+</atlassian-plugin>
