@@ -1,52 +1,37 @@
 package io.github.campbellbartlett.codeinsightextension.rest;
 
-import com.atlassian.bitbucket.auth.AuthenticationContext;
-import com.atlassian.bitbucket.pull.PullRequest;
-import com.atlassian.bitbucket.pull.PullRequestSearchRequest;
-import com.atlassian.bitbucket.pull.PullRequestService;
-import com.atlassian.bitbucket.repository.Repository;
-import com.atlassian.bitbucket.repository.RepositoryService;
-import com.atlassian.bitbucket.util.PageRequestImpl;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import io.github.campbellbartlett.codeinsightextension.InsightReportStatus;
-import io.github.campbellbartlett.codeinsightextension.InsightReportStatusService;
+import io.github.campbellbartlett.codeinsightextension.AdminRiskAcceptedService;
+import io.github.campbellbartlett.codeinsightextension.CodeInsightExtensionsPermissionService;
+import io.github.campbellbartlett.codeinsightextension.InsightPullRequestContextService;
+import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Path("/")
 @Service
 public class InsightReportStatusRestService {
 
-    private static final Logger logger = LoggerFactory.getLogger(InsightReportStatusService.class);
+    private static final Logger logger = LoggerFactory.getLogger(InsightReportStatusRestService.class);
 
-    private final RepositoryService repositoryService;
-    private final PullRequestService pullRequestService;
-    private final AuthenticationContext authenticationContext;
-
-    private final InsightReportStatusService insightReportStatusService;
+    private final AdminRiskAcceptedService adminRiskAcceptedService;
+    private final InsightPullRequestContextService insightPullRequestContextService;
+    private final CodeInsightExtensionsPermissionService codeInsightExtensionsPermissionService;
 
     @Autowired
-    public InsightReportStatusRestService(@ComponentImport AuthenticationContext authenticationContext,
-                                          @ComponentImport PullRequestService pullRequestService,
-                                          @ComponentImport RepositoryService repositoryService,
-                                          InsightReportStatusService insightReportStatusService) {
-        this.repositoryService = repositoryService;
-        this.pullRequestService = pullRequestService;
-        this.authenticationContext = authenticationContext;
-        this.insightReportStatusService = insightReportStatusService;
+    public InsightReportStatusRestService(AdminRiskAcceptedService adminRiskAcceptedService,
+                                          InsightPullRequestContextService insightPullRequestContextService,
+                                          CodeInsightExtensionsPermissionService codeInsightExtensionsPermissionService) {
+        this.codeInsightExtensionsPermissionService = codeInsightExtensionsPermissionService;
+        this.insightPullRequestContextService = insightPullRequestContextService;
+        this.adminRiskAcceptedService = adminRiskAcceptedService;
     }
 
     @GET
@@ -61,44 +46,35 @@ public class InsightReportStatusRestService {
     }
 
     @GET
-    @Path("pullRequest/{projectId}/{slug}/{prId}/insightReportStatus/{reportKey}")
+    @Path("pullRequest/{projectId}/{slug}/{commitHash}/context")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getInsightReportStatus(
-            @PathParam("projectId") String projectId,
-            @PathParam("slug") String slug,
-            @PathParam("prId") long prId,
-            @PathParam("reportKey") String insightReportKey) {
-        Repository repository = repositoryService.getBySlug(projectId, slug);
+    public Response getInsightExtensionContextForCommit(@PathParam("projectId") String projectId, @PathParam("slug") String slug, @PathParam("commitHash") String commitHash) {
 
-        if (repository == null) {
-            logger.warn("Cannot find repository in project [{}] with slug [{}]", projectId, slug);
-            return Response.status(Response.Status.NOT_FOUND)
+        if (!codeInsightExtensionsPermissionService.doesUserHaveRepoViewPermission(projectId, slug)) {
+            return Response.status(Response.Status.FORBIDDEN)
                     .build();
         }
 
-        PullRequestSearchRequest prSearchRequest = new PullRequestSearchRequest.Builder()
-                .fromRepositoryId(repository.getId())
-                .build();
+        try {
+            PullRequestContext pullRequestContext = insightPullRequestContextService.createContextForCommit(projectId, slug, commitHash);
+            return Response.status(Response.Status.OK)
+                    .entity(pullRequestContext)
+                    .build();
+        } catch (RepositoryNotFoundException | PullRequestNotFoundException e) {
+            logger.error(e.getMessage());
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 
-        PullRequest pullRequest = pullRequestService.search(prSearchRequest, new PageRequestImpl(0, 100))
-                .stream()
-                .filter(pr -> pr.getId() == prId)
-                .findFirst()
-                .orElse(null);
-
-        if (pullRequest == null) {
-            logger.warn("Cannot find PR in repository [{}] with id [{}]", repository.getName(), prId);
-            return Response.status(Response.Status.NOT_FOUND)
+    @PUT
+    @Path("pullRequest/{projectId}/{slug}/{commitHash}/override")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putAdminOverrideForPr(@PathParam("projectId") String projectId, @PathParam("slug") String slug, @PathParam("commitHash") String commitHash) {
+        if (!codeInsightExtensionsPermissionService.doesUserHaveRepoAdminPermission(projectId, slug)) {
+            return Response.status(Response.Status.FORBIDDEN)
                     .build();
         }
-
-        InsightReportStatus reportStatus = insightReportStatusService.getResultForPullRequestInsight(pullRequest, insightReportKey);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", reportStatus);
-
-        return Response.status(Response.Status.OK)
-                .entity(response)
-                .build();
+        adminRiskAcceptedService.createOrUpdateAdminOverrideForCommit(projectId, slug, commitHash);
+        return Response.status(Response.Status.OK).build();
     }
 }

@@ -27,7 +27,7 @@ public class PullRequestMergeCheckService implements RepositoryMergeCheck {
     public RepositoryHookResult preUpdate(@Nonnull PreRepositoryHookContext context, @Nonnull PullRequestMergeHookRequest request) {
         PullRequest pullRequest = request.getPullRequest();
 
-        if (adminRiskAcceptedService.hasAdminAcceptedRisk(pullRequest)) {
+        if (adminRiskAcceptedService.hasAdminAcceptedRisk(request.getRepository(), pullRequest.getFromRef().getLatestCommit())) {
             return RepositoryHookResult.accepted();
         }
 

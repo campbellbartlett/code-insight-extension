@@ -9,9 +9,9 @@ import java.util.List;
 @Transactional
 public interface PullRequestRiskAcceptedRepository {
 
-    PullRequestRiskAccepted add(long pullRequestId, String repoSlug, String authenticatingUserSlug, Date createDate);
+    PullRequestRiskAccepted add(String commitHash, String repoSlug, String projectId, String authenticatingUserSlug, Date createDate);
 
     List<PullRequestRiskAccepted> findAll();
 
-    List<PullRequestRiskAccepted> findAllForPullRequest(long pullRequestId);
+    List<PullRequestRiskAccepted> findAllForPullRequest(String projectId, String repoSlug, String commitHash);
 }

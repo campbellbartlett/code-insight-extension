@@ -3,6 +3,7 @@ package io.github.campbellbartlett.codeinsightextension.repository;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import io.github.campbellbartlett.codeinsightextension.activeobjects.PullRequestRiskAccepted;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,11 @@ public class PullRequestRiskAcceptedRepositoryImpl implements PullRequestRiskAcc
     }
 
     @Override
-    public PullRequestRiskAccepted add(long pullRequestId, String repoSlug, String authenticatingUserSlug, Date createDate) {
+    public PullRequestRiskAccepted add(String commitHash, String repoSlug, String projectId, String authenticatingUserSlug, Date createDate) {
         final PullRequestRiskAccepted riskAccepted = activeObjects.create(PullRequestRiskAccepted.class);
 
-        riskAccepted.setPullRequestId(pullRequestId);
+        riskAccepted.setCommitHash(commitHash);
+        riskAccepted.setProjectId(projectId);
         riskAccepted.setRepositorySlug(repoSlug);
         riskAccepted.setAuthenticatingUserSlug(authenticatingUserSlug);
         riskAccepted.setAcceptedDate(createDate);
@@ -40,9 +42,11 @@ public class PullRequestRiskAcceptedRepositoryImpl implements PullRequestRiskAcc
     }
 
     @Override
-    public List<PullRequestRiskAccepted> findAllForPullRequest(long pullRequestId) {
+    public List<PullRequestRiskAccepted> findAllForPullRequest(String projectId, String repoSlug, String commitHash) {
         return findAll().stream()
-                .filter(record -> record.getPullRequestId() == pullRequestId)
+                .filter(record -> StringUtils.equals(record.getCommitHash(), commitHash))
+                .filter(record -> StringUtils.equals(record.getRepositorySlug(), repoSlug))
+                .filter(record -> StringUtils.equals(record.getProjectId(), projectId))
                 .collect(Collectors.toList());
     }
 }

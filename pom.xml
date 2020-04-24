@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.campbellbartlett</groupId>
     <artifactId>code-insight-extensions</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>atlassian-plugin</packaging>
     <name>code-insight-extensions</name>
-    <description>This is the io.github.campbellbartlett:code-insight-extensions plugin for Atlassian Bitbucket Server.</description>
+    <description>This is the io.github.campbellbartlett:code-insight-extensions plugin for Atlassian Bitbucket Server.
+    </description>
     <organization>
         <name>Campbell Bartlett</name>
         <url>https://campbellbartlett.github.io/</url>
@@ -162,6 +164,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
             <version>${plugin.testrunner.version}</version>
@@ -208,7 +216,9 @@
                         <!-- Add package to export here -->
                         <Export-Package>io.github.campbellbartlett.api,</Export-Package>
                         <!-- Add package import here -->
-                        <Import-Package>org.springframework.osgi.*;resolution:="optional", org.eclipse.gemini.blueprint.*;resolution:="optional", *</Import-Package>
+                        <Import-Package>org.springframework.osgi.*;resolution:="optional",
+                            org.eclipse.gemini.blueprint.*;resolution:="optional", *
+                        </Import-Package>
                         <!-- Ensure plugin is Spring powered -->
                         <Spring-Context>*</Spring-Context>
                     </instructions>

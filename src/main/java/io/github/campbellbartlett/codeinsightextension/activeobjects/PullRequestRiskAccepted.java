@@ -8,11 +8,14 @@ import java.util.Date;
 @Table("PR_ACCEPTED")
 public interface PullRequestRiskAccepted extends Entity {
 
-    long getPullRequestId();
-    void setPullRequestId(long pullRequestId);
+    String getCommitHash();
+    void setCommitHash(String commitHash);
 
     String getRepositorySlug();
     void setRepositorySlug(String repoSlug);
+
+    String getProjectId();
+    void setProjectId(String projectId);
 
     String getAuthenticatingUserSlug();
     void setAuthenticatingUserSlug(String adminSlug);
