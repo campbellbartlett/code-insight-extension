@@ -1,5 +1,5 @@
-import {ModalExtension, renderElementAsReact} from '@atlassian/clientside-extensions';
-import React, {useState} from 'react';
+import { ModalExtension, renderElementAsReact } from '@atlassian/clientside-extensions';
+import React from 'react';
 
 /**
  * @clientside-extension
@@ -11,49 +11,48 @@ function getFetchOptions(methodType) {
     return {
         method: methodType,
         headers: {
-            'Content-Type': 'application/json'
-        }
-    }
+            'Content-Type': 'application/json',
+        },
+    };
 }
 
 function getPullRequestInsightExtensionsContextUri(context) {
     if (!context) {
         console.error('Context is required');
-        return;
+        return '';
     }
 
-    let projectKey = context.project.key;
-    let repoSlug = context.repository.slug;
-    let commitHash = context.pullRequest.fromRef.latestCommit;
+    const projectKey = context.project.key;
+    const repoSlug = context.repository.slug;
+    const commitHash = context.pullRequest.fromRef.latestCommit;
 
-    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/context`
+    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/context`;
 }
 
-function putPullRequestAdminOverrideUri(context) {
+function putPullRequestAdminOverrideUri(context, state) {
     if (!context) {
         console.error('Context is required');
-        return;
+        return '';
     }
 
-    let projectKey = context.project.key;
-    let repoSlug = context.repository.slug;
-    let commitHash = context.pullRequest.fromRef.latestCommit;
+    const projectKey = context.project.key;
+    const repoSlug = context.repository.slug;
+    const commitHash = context.pullRequest.fromRef.latestCommit;
+    const revoke = state && state.loaded && state.insightsContext.adminOverride ? 'true' : 'false';
 
-    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/override`
+    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/override?revoke=${revoke}`;
 }
 
 export default ModalExtension.factory((api, context) => {
     return {
         label: `Code Insight Extension`,
         onAction(modalApi) {
-            modalApi
-                .setTitle('Code Insights Extension')
-                .setWidth(ModalExtension.Width.large)
+            modalApi.setTitle('Code Insights Extension').setWidth(ModalExtension.Width.large);
 
             class ModalComponent extends React.Component {
                 constructor(props) {
                     super(props);
-                    this.state = {loaded: false, admin: false};
+                    this.state = { loaded: false, admin: false };
                 }
 
                 componentDidMount() {
@@ -63,84 +62,108 @@ export default ModalExtension.factory((api, context) => {
                 }
 
                 setActionButtons() {
-                    let mainButton = {
-                        text: this.state.loaded && this.state.insightsContext.adminOverride ? 'Disable merge override' : 'Enable merge override',
+                    const isOverridden =
+                        this.state.loaded && this.state.insightsContext.adminOverride;
+                    const mainButton = {
+                        text: isOverridden ? 'Disable merge override' : 'Enable merge override',
                         onClick: () => {
                             this.sendAdminOverride();
                         },
                         isDisabled: this.state.loaded && !this.state.insightsContext.userAdmin,
                     };
-                    let closeButton = {
+                    const closeButton = {
                         text: 'Close',
                         onClick: () => {
                             modalApi.closeModal();
                         },
                     };
-                    modalApi.setAppearance(this.state.loaded && this.state.insightsContext.adminOverride ? ModalExtension.Appearance.warning : ModalExtension.Appearance.danger)
+                    modalApi.setAppearance(
+                        this.state.loaded && this.state.insightsContext.adminOverride
+                            ? ModalExtension.Appearance.warning
+                            : ModalExtension.Appearance.danger
+                    );
                     modalApi.setActions([mainButton, closeButton]);
                 }
 
                 getCodeInsightExtensionsContext() {
-                    fetch(getPullRequestInsightExtensionsContextUri(context), getFetchOptions('GET'))
+                    fetch(
+                        getPullRequestInsightExtensionsContextUri(context),
+                        getFetchOptions('GET')
+                    )
                         .then(res => res.json())
                         .then(insightsContext => {
                             console.log(insightsContext);
-                            this.setState({insightsContext: insightsContext});
-                            this.setState({loaded: true});
+                            this.setState({ insightsContext });
+                            this.setState({ loaded: true });
                             this.setActionButtons();
                         });
                 }
 
                 sendAdminOverride() {
-                    fetch(putPullRequestAdminOverrideUri(context), getFetchOptions('PUT'))
-                        .then(res => console.log(`Put call to adminOverride complete. Response was [${res.status}]`))
+                    fetch(
+                        putPullRequestAdminOverrideUri(context, this.state),
+                        getFetchOptions('PUT')
+                    )
+                        .then(res =>
+                            console.log(
+                                `Put call to adminOverride complete. Response was [${res.status}]`
+                            )
+                        )
                         .then(() => this.getCodeInsightExtensionsContext());
                 }
 
                 render() {
+                    const { loaded } = this.state;
+                    const { insightsContext } = this.state;
                     return (
                         <div data-testid="modal-with-action-callback">
-                            { this.state.loaded
-                                && this.state.insightsContext.userAdmin
-                                && this.state.insightsContext.adminOverride
-                                && <h3>An administrator has provided authorisation to enable merging of this pull
-                                    request before all code insight status reports have passed.</h3>
-                            }
-                            { this.state.loaded
-                                && this.state.insightsContext.userAdmin
-                                && !this.state.insightsContext.adminOverride
-                                && <h3>This Pull Request cannot be merged until all code insight quality reports have
-                                    passed.</h3>
-                            }
-                            <br/>
-                            { this.state.loaded
-                                && this.state.insightsContext.codeInsightReports.some(report => report.status === 'WAITING')
-                                && `Some code insight quality reports for this pull request are still waiting to report.`
-                            }
-                            <br/>
-                            { this.state.loaded
-                                && this.state.insightsContext.codeInsightReports.some(report => report.status === 'FAIL')
-                                && `Some code insight quality reports for this pull request have failed.`
-                            }
-                            <br/>
-                            { this.state.loaded
-                                && this.state.insightsContext.userAdmin
-                                && this.state.insightsContext.codeInsightReports.every(report => report.status === 'PASS')
-                                && `All code insight quality reports for this pull request have passed.`
-                            }
-                            { this.state.loaded
-                                && this.state.insightsContext.userAdmin
-                                && !this.state.insightsContext.adminOverride
-                                && !this.state.insightsContext.codeInsightReports.every(report => report.status === 'PASS')
-                                && <p style="margin-top: 1rem;">As administrator of this pull request you can enable merging before all code insight quality reports have passed.</p>
-                            }
-
-                            {/*{this.state.loaded && this.state.insightsContext.codeInsightReports.map(report => (*/}
-                            {/*        <React.Fragment key={report.name}>*/}
-                            {/*            <ul>{report.name}: {report.status}</ul>*/}
-                            {/*        </React.Fragment>*/}
-                            {/*    )*/}
-                            {/*)}*/}
+                            {loaded &&
+                                insightsContext.userAdmin &&
+                                insightsContext.adminOverride && (
+                                    <h3>
+                                        An administrator has provided authorisation to enable
+                                        merging of this pull request before all code insight status
+                                        reports have passed.
+                                    </h3>
+                                )}
+                            {loaded &&
+                                insightsContext.userAdmin &&
+                                !insightsContext.adminOverride && (
+                                    <h3>
+                                        This Pull Request cannot be merged until all code insight
+                                        quality reports have passed.
+                                    </h3>
+                                )}
+                            <br />
+                            {loaded &&
+                                insightsContext.codeInsightReports.some(
+                                    report => report.status === 'WAITING'
+                                ) &&
+                                `Some code insight quality reports for this pull request are still waiting to report.`}
+                            <br />
+                            {loaded &&
+                                insightsContext.codeInsightReports.some(
+                                    report => report.status === 'FAIL'
+                                ) &&
+                                `Some code insight quality reports for this pull request have failed.`}
+                            <br />
+                            {loaded &&
+                                insightsContext.userAdmin &&
+                                insightsContext.codeInsightReports.every(
+                                    report => report.status === 'PASS'
+                                ) &&
+                                `All code insight quality reports for this pull request have passed.`}
+                            {loaded &&
+                                insightsContext.userAdmin &&
+                                !insightsContext.adminOverride &&
+                                !insightsContext.codeInsightReports.every(
+                                    report => report.status === 'PASS'
+                                ) && (
+                                    <p>
+                                        As administrator of this pull request you can enable merging
+                                        before all code insight quality reports have passed.
+                                    </p>
+                                )}
                         </div>
                     );
                 }

@@ -37,6 +37,15 @@ public class PullRequestRiskAcceptedRepositoryImpl implements PullRequestRiskAcc
     }
 
     @Override
+    public void delete(String commitHash, String repoSlug, String projectId) {
+        List<PullRequestRiskAccepted> allForPullRequest = findAllForPullRequest(projectId, repoSlug, commitHash);
+
+        for (PullRequestRiskAccepted pullRequest: allForPullRequest) {
+            activeObjects.delete(pullRequest);
+        }
+    }
+
+    @Override
     public List<PullRequestRiskAccepted> findAll() {
         return Arrays.asList(activeObjects.find(PullRequestRiskAccepted.class));
     }

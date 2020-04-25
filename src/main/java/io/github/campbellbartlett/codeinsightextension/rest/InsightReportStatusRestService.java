@@ -3,6 +3,8 @@ package io.github.campbellbartlett.codeinsightextension.rest;
 import io.github.campbellbartlett.codeinsightextension.AdminRiskAcceptedService;
 import io.github.campbellbartlett.codeinsightextension.CodeInsightExtensionsPermissionService;
 import io.github.campbellbartlett.codeinsightextension.InsightPullRequestContextService;
+import io.github.campbellbartlett.codeinsightextension.rest.exeption.PullRequestNotFoundException;
+import io.github.campbellbartlett.codeinsightextension.rest.exeption.RepositoryNotFoundException;
 import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,12 +71,17 @@ public class InsightReportStatusRestService {
     @PUT
     @Path("pullRequest/{projectId}/{slug}/{commitHash}/override")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response putAdminOverrideForPr(@PathParam("projectId") String projectId, @PathParam("slug") String slug, @PathParam("commitHash") String commitHash) {
+    public Response putAdminOverrideForPr(
+            @PathParam("projectId") String projectId,
+            @PathParam("slug") String slug,
+            @PathParam("commitHash") String commitHash,
+            @QueryParam("revoke") @DefaultValue("false") boolean revoke) {
         if (!codeInsightExtensionsPermissionService.doesUserHaveRepoAdminPermission(projectId, slug)) {
             return Response.status(Response.Status.FORBIDDEN)
                     .build();
         }
-        adminRiskAcceptedService.createOrUpdateAdminOverrideForCommit(projectId, slug, commitHash);
+        logger.error("The value of revoke is [{}]", revoke);
+        adminRiskAcceptedService.createOrUpdateAdminOverrideForCommit(projectId, slug, commitHash, revoke);
         return Response.status(Response.Status.OK).build();
     }
 }

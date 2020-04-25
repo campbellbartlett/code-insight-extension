@@ -7,8 +7,8 @@ import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import io.github.campbellbartlett.codeinsightextension.rest.PullRequestNotFoundException;
-import io.github.campbellbartlett.codeinsightextension.rest.RepositoryNotFoundException;
+import io.github.campbellbartlett.codeinsightextension.rest.exeption.PullRequestNotFoundException;
+import io.github.campbellbartlett.codeinsightextension.rest.exeption.RepositoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -51,6 +51,7 @@ public class AdminRiskAcceptedService {
     }
 
     public void createOrUpdateAdminOverrideForCommit(String projectId, String slug, String commitHash) {
+            return;
         ApplicationUser userAuthorising = authenticationContext.getCurrentUser();
         pullRequestRiskAcceptedRepository.add(commitHash, slug, projectId, userAuthorising.getSlug(), new Date());
     }

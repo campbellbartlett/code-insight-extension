@@ -1,9 +1,6 @@
 package io.github.campbellbartlett.codeinsightextension;
 
-import com.atlassian.bitbucket.codeinsights.report.GetInsightReportRequest;
-import com.atlassian.bitbucket.codeinsights.report.InsightReport;
-import com.atlassian.bitbucket.codeinsights.report.InsightReportService;
-import com.atlassian.bitbucket.codeinsights.report.InsightResult;
+import com.atlassian.bitbucket.codeinsights.report.*;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.springframework.beans.factory.annotation.Autowired;
