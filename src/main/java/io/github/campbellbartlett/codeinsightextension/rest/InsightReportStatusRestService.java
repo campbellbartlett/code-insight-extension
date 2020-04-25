@@ -80,7 +80,6 @@ public class InsightReportStatusRestService {
             return Response.status(Response.Status.FORBIDDEN)
                     .build();
         }
-        logger.error("The value of revoke is [{}]", revoke);
         adminRiskAcceptedService.createOrUpdateAdminOverrideForCommit(projectId, slug, commitHash, revoke);
         return Response.status(Response.Status.OK).build();
     }
