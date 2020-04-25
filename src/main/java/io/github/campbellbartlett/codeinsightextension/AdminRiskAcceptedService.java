@@ -50,8 +50,11 @@ public class AdminRiskAcceptedService {
                 .anyMatch(user -> permissionService.hasRepositoryPermission(user, repository, Permission.REPO_ADMIN));
     }
 
-    public void createOrUpdateAdminOverrideForCommit(String projectId, String slug, String commitHash) {
+    public void createOrUpdateAdminOverrideForCommit(String projectId, String slug, String commitHash, boolean revoke) {
+        if (revoke) {
+            pullRequestRiskAcceptedRepository.delete(commitHash, slug, projectId);
             return;
+        }
         ApplicationUser userAuthorising = authenticationContext.getCurrentUser();
         pullRequestRiskAcceptedRepository.add(commitHash, slug, projectId, userAuthorising.getSlug(), new Date());
     }
