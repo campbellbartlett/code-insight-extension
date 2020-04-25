@@ -11,6 +11,10 @@ public interface PullRequestRiskAcceptedRepository {
 
     PullRequestRiskAccepted add(String commitHash, String repoSlug, String projectId, String authenticatingUserSlug, Date createDate);
 
+    /**
+     * Soft deletes a record by marking it as revoked.
+     * Records that are revoked are not used to determine the 'mergability' of a pull request
+     */
     void delete(String commitHash, String repoSlug, String projectId);
 
     List<PullRequestRiskAccepted> findAll();

@@ -1,13 +1,12 @@
 package io.github.campbellbartlett.codeinsightextension;
 
 import com.atlassian.bitbucket.auth.AuthenticationContext;
+import com.atlassian.bitbucket.codeinsights.report.InsightReport;
+import com.atlassian.bitbucket.codeinsights.report.InsightResult;
 import com.atlassian.bitbucket.permission.Permission;
 import com.atlassian.bitbucket.permission.PermissionService;
 import com.atlassian.bitbucket.pull.PullRequest;
-import com.atlassian.bitbucket.pull.PullRequestSearchRequest;
-import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.bitbucket.repository.Repository;
-import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.Set;
 @Service
 public class InsightPullRequestContextService {
 
-    private final PullRequestService pullRequestService;
     private final PermissionService permissionService;
     private final AuthenticationContext authenticationContext;
 
@@ -30,13 +28,11 @@ public class InsightPullRequestContextService {
     private final AdminRiskAcceptedService adminRiskAcceptedService;
 
     @Autowired
-    public InsightPullRequestContextService(@ComponentImport PullRequestService pullRequestService,
-                                            @ComponentImport PermissionService permissionService,
+    public InsightPullRequestContextService(@ComponentImport PermissionService permissionService,
                                             @ComponentImport AuthenticationContext authenticationContext,
                                             RepositoryResolveService repositoryResolveService,
                                             InsightReportStatusService insightReportStatusService,
                                             AdminRiskAcceptedService adminRiskAcceptedService) {
-        this.pullRequestService = pullRequestService;
         this.permissionService = permissionService;
         this.authenticationContext = authenticationContext;
         this.repositoryResolveService = repositoryResolveService;
@@ -44,9 +40,12 @@ public class InsightPullRequestContextService {
         this.adminRiskAcceptedService = adminRiskAcceptedService;
     }
 
-    public PullRequestContext createContextForCommit(String projectId, String slug, String commitHash) {
-        PullRequest pullRequest = repositoryResolveService.getPullRequest(projectId, slug, commitHash);
+    public PullRequestContext createContextForPullRequest(PullRequest pullRequest) {
         Repository repository = pullRequest.getFromRef().getRepository();
+
+        String projectId = repository.getProject().getKey();
+        String slug = repository.getSlug();
+        String commitHash = pullRequest.getFromRef().getLatestCommit();
 
         Set<Map<String, Object>> insightReports = createInsightReportContexts(pullRequest);
 
@@ -60,16 +59,9 @@ public class InsightPullRequestContextService {
                 .build();
     }
 
-    private PullRequest getPullRequest(long prId, Repository repository) {
-        PullRequestSearchRequest prSearchRequest = new PullRequestSearchRequest.Builder()
-                .fromRepositoryId(repository.getId())
-                .build();
-
-        return pullRequestService.search(prSearchRequest, new PageRequestImpl(0, 100))
-                .stream()
-                .filter(pr -> pr.getId() == prId)
-                .findFirst()
-                .orElse(null);
+    public PullRequestContext createContextForCommit(String projectId, String slug, String commitHash) {
+        PullRequest pullRequest = repositoryResolveService.getPullRequest(projectId, slug, commitHash);
+        return createContextForPullRequest(pullRequest);
     }
 
     private boolean isUserAdmin(Repository repository) {
@@ -77,23 +69,29 @@ public class InsightPullRequestContextService {
     }
 
     private Set<Map<String, Object>> createInsightReportContexts(PullRequest pullRequest) {
-        Set<Map<String, Object>> insightReports = new HashSet<>();
-        for (String key :insightReportKeysForPr(pullRequest)) {
+        Set<InsightReport> insightReports = insightReportStatusService.getAllReportsForPullRequest(pullRequest);
+
+        Set<Map<String, Object>> insightReportContext = new HashSet<>();
+        for (InsightReport report: insightReports) {
             Map<String, Object> insightReportStatus = new HashMap<>();
-            InsightReportStatus status = insightReportStatusService.getResultForPullRequestInsight(pullRequest, key);
-            insightReportStatus.put("name", key);
+
+            InsightReportStatus status = getInsightReportStatus(report);
+
+            insightReportStatus.put("name", report.getKey());
             insightReportStatus.put("status", status);
 
-            insightReports.add(insightReportStatus);
+            insightReportContext.add(insightReportStatus);
         }
-        return insightReports;
+        return insightReportContext;
     }
 
-    private Set<String> insightReportKeysForPr(PullRequest pullRequest) {
-        Set<String> keys = new HashSet<>();
-        keys.add("theKey");
-        keys.add("fortify");
-
-        return keys;
+    private InsightReportStatus getInsightReportStatus(InsightReport report) {
+        if (report.getResult().isPresent()) {
+            if (report.getResult().get().equals(InsightResult.FAIL)) {
+                return InsightReportStatus.FAIL;
+            }
+            return InsightReportStatus.PASS;
+        }
+        return InsightReportStatus.WAITING;
     }
 }

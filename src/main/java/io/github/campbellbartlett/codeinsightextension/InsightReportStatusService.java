@@ -1,15 +1,23 @@
 package io.github.campbellbartlett.codeinsightextension;
 
-import com.atlassian.bitbucket.codeinsights.report.*;
+import com.atlassian.bitbucket.codeinsights.report.InsightReport;
+import com.atlassian.bitbucket.codeinsights.report.InsightReportService;
+import com.atlassian.bitbucket.codeinsights.report.SearchInsightReportRequest;
 import com.atlassian.bitbucket.pull.PullRequest;
+import com.atlassian.bitbucket.util.Page;
+import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class InsightReportStatusService {
+
+    private static final int PAGE_SIZE = 20;
 
     private final InsightReportService insightReportService;
 
@@ -18,21 +26,28 @@ public class InsightReportStatusService {
         this.insightReportService = insightReportService;
     }
 
-    public InsightReportStatus getResultForPullRequestInsight(PullRequest pullRequest, String insightKey) {
-        GetInsightReportRequest insightReportRequest = new GetInsightReportRequest.Builder(pullRequest, insightKey).build();
-        Optional<InsightReport> optionalInsight = insightReportService.get(insightReportRequest);
+    public Set<InsightReport> getAllReportsForPullRequest(PullRequest pullRequest) {
+        int pageFrom = 0;
+        Page<InsightReport> insightReportPage = getPageOfInsightReports(pullRequest, pageFrom);
+        Set<InsightReport> insightReports = insightReportPage.stream().collect(Collectors.toSet());
 
-        if (!optionalInsight.isPresent() || !optionalInsight.get().getResult().isPresent()) {
-            return InsightReportStatus.WAITING;
+        while (isNotLastPage(insightReportPage)) {
+            pageFrom = pageFrom + PAGE_SIZE;
+            insightReportPage = getPageOfInsightReports(pullRequest, pageFrom);
+            insightReports.addAll(new ArrayList<>(insightReports));
         }
 
-        InsightResult insightResult = optionalInsight.get().getResult().get();
+        return insightReports;
+    }
 
-        if (insightResult.equals(InsightResult.PASS)) {
-            return InsightReportStatus.PASS;
-        }
+    private boolean isNotLastPage(Page<InsightReport> insightReportPage) {
+        return !insightReportPage.getIsLastPage();
+    }
 
-        return InsightReportStatus.FAIL;
+    private Page<InsightReport> getPageOfInsightReports(PullRequest pullRequest, int pageFrom) {
+        SearchInsightReportRequest searchInsightReportRequest = new SearchInsightReportRequest
+                .Builder(pullRequest).build();
+        return insightReportService.search(searchInsightReportRequest, new PageRequestImpl(pageFrom, PAGE_SIZE));
     }
 
 }

@@ -22,4 +22,7 @@ public interface PullRequestRiskAccepted extends Entity {
 
     Date getAcceptedDate();
     void setAcceptedDate(Date date);
+
+    boolean getRevoked();
+    void setRevoked(boolean revoked);
 }

@@ -5,6 +5,7 @@ import com.atlassian.bitbucket.hook.repository.PullRequestMergeHookRequest;
 import com.atlassian.bitbucket.hook.repository.RepositoryHookResult;
 import com.atlassian.bitbucket.hook.repository.RepositoryMergeCheck;
 import com.atlassian.bitbucket.pull.PullRequest;
+import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,14 @@ import javax.annotation.Nonnull;
 @Component
 public class PullRequestMergeCheckService implements RepositoryMergeCheck {
 
-    private final InsightReportStatusService insightReportStatusService;
     private final AdminRiskAcceptedService adminRiskAcceptedService;
 
+    private final InsightPullRequestContextService insightPullRequestContextService;
+
     @Autowired
-    public PullRequestMergeCheckService(AdminRiskAcceptedService adminRiskAcceptedService, InsightReportStatusService insightReportStatusService) {
+    public PullRequestMergeCheckService(AdminRiskAcceptedService adminRiskAcceptedService, InsightPullRequestContextService insightPullRequestContextService) {
         this.adminRiskAcceptedService = adminRiskAcceptedService;
-        this.insightReportStatusService = insightReportStatusService;
+        this.insightPullRequestContextService = insightPullRequestContextService;
     }
 
     @Nonnull
@@ -31,13 +33,19 @@ public class PullRequestMergeCheckService implements RepositoryMergeCheck {
             return RepositoryHookResult.accepted();
         }
 
-        InsightReportStatus reportStatus = insightReportStatusService.getResultForPullRequestInsight(pullRequest, "theKey");
+        PullRequestContext insightsContext = insightPullRequestContextService.createContextForPullRequest(pullRequest);
 
-        if (reportStatus.equals(InsightReportStatus.FAIL)) {
+        if (insightsContext.getCodeInsightReports().stream()
+                .map(report -> ((InsightReportStatus) report.get("status")))
+                .anyMatch(status -> status.equals(InsightReportStatus.FAIL))
+        ) {
             return RepositoryHookResult.rejected("Unable to merge due to failing code insight", "Unable to merge until all code insight checks have passed");
         }
 
-        if (reportStatus.equals(InsightReportStatus.WAITING)) {
+        if (insightsContext.getCodeInsightReports().stream()
+                .map(report -> ((InsightReportStatus) report.get("status")))
+                .anyMatch(status -> status.equals(InsightReportStatus.WAITING))
+        ){
             return RepositoryHookResult.rejected("Waiting for code insight status to be reported", "Merging is blocked until all code insights have reported their status");
         }
 

@@ -31,17 +31,20 @@ public class PullRequestRiskAcceptedRepositoryImpl implements PullRequestRiskAcc
         riskAccepted.setRepositorySlug(repoSlug);
         riskAccepted.setAuthenticatingUserSlug(authenticatingUserSlug);
         riskAccepted.setAcceptedDate(createDate);
+        riskAccepted.setRevoked(false);
         riskAccepted.save();
 
         return riskAccepted;
     }
-
     @Override
     public void delete(String commitHash, String repoSlug, String projectId) {
-        List<PullRequestRiskAccepted> allForPullRequest = findAllForPullRequest(projectId, repoSlug, commitHash);
+        List<PullRequestRiskAccepted> allForPullRequest = findAllForPullRequest(projectId, repoSlug, commitHash).stream()
+                .filter(acceptance -> !acceptance.getRevoked())
+                .collect(Collectors.toList());
 
         for (PullRequestRiskAccepted pullRequest: allForPullRequest) {
-            activeObjects.delete(pullRequest);
+            pullRequest.setRevoked(true);
+            pullRequest.save();
         }
     }
 
@@ -56,6 +59,7 @@ public class PullRequestRiskAcceptedRepositoryImpl implements PullRequestRiskAcc
                 .filter(record -> StringUtils.equals(record.getCommitHash(), commitHash))
                 .filter(record -> StringUtils.equals(record.getRepositorySlug(), repoSlug))
                 .filter(record -> StringUtils.equals(record.getProjectId(), projectId))
+                .filter(record -> !record.getRevoked())
                 .collect(Collectors.toList());
     }
 }
