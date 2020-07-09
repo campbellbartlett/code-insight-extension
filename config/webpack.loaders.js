@@ -23,7 +23,13 @@ function getLoaders({ isProductionEnv = false }) {
                 },
             ],
         },
-
+        {
+            test: /\.tsx?$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader',
+            },
+        },
         {
             test: /\.less$/,
             use: [

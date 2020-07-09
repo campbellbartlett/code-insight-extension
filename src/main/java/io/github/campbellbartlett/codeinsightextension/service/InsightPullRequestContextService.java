@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.codeinsightextension;
+package io.github.campbellbartlett.codeinsightextension.service;
 
 import com.atlassian.bitbucket.auth.AuthenticationContext;
 import com.atlassian.bitbucket.codeinsights.report.InsightReport;
@@ -8,6 +8,7 @@ import com.atlassian.bitbucket.permission.PermissionService;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import io.github.campbellbartlett.codeinsightextension.InsightReportStatus;
 import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

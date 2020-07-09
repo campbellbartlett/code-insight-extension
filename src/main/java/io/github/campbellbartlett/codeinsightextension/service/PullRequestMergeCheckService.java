@@ -1,10 +1,11 @@
-package io.github.campbellbartlett.codeinsightextension;
+package io.github.campbellbartlett.codeinsightextension.service;
 
 import com.atlassian.bitbucket.hook.repository.PreRepositoryHookContext;
 import com.atlassian.bitbucket.hook.repository.PullRequestMergeHookRequest;
 import com.atlassian.bitbucket.hook.repository.RepositoryHookResult;
 import com.atlassian.bitbucket.hook.repository.RepositoryMergeCheck;
 import com.atlassian.bitbucket.pull.PullRequest;
+import io.github.campbellbartlett.codeinsightextension.InsightReportStatus;
 import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,8 @@
 package io.github.campbellbartlett.codeinsightextension.rest;
 
-import io.github.campbellbartlett.codeinsightextension.AdminRiskAcceptedService;
-import io.github.campbellbartlett.codeinsightextension.CodeInsightExtensionsPermissionService;
-import io.github.campbellbartlett.codeinsightextension.InsightPullRequestContextService;
+import io.github.campbellbartlett.codeinsightextension.service.AdminRiskAcceptedService;
+import io.github.campbellbartlett.codeinsightextension.service.CodeInsightExtensionsPermissionService;
+import io.github.campbellbartlett.codeinsightextension.service.InsightPullRequestContextService;
 import io.github.campbellbartlett.codeinsightextension.rest.exeption.PullRequestNotFoundException;
 import io.github.campbellbartlett.codeinsightextension.rest.exeption.RepositoryNotFoundException;
 import io.github.campbellbartlett.codeinsightextension.rest.pojo.PullRequestContext;
