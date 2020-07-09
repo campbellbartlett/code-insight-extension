@@ -82,7 +82,7 @@ module.exports = (env, argv = {}) => {
             },
 
             resolve: {
-                extensions: ['.js', '.jsx'],
+                extensions: ['.js', '.jsx', 'tsx', 'ts'],
             },
 
             stats: {

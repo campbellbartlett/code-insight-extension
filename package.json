@@ -6,10 +6,12 @@
     "license": "Atlassian End User License",
     "dependencies": {
         "@atlaskit/button": "13.3.6",
+        "@atlaskit/status": "^0.9.23",
         "@atlassian/clientside-extensions": "1.0.0",
         "@atlassian/wrm-react-i18n": "0.4.5",
-        "prop-types": "15.7.2",
+        "prop-types": "^15.7.2",
         "react": "16.12.0",
+        "react-admonitions": "^2.1.0",
         "react-dom": "16.12.0",
         "styled-components": "3.4.10"
     },

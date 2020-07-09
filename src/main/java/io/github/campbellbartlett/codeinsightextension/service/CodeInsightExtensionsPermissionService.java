@@ -1,4 +1,4 @@
-package io.github.campbellbartlett.codeinsightextension;
+package io.github.campbellbartlett.codeinsightextension.service;
 
 import com.atlassian.bitbucket.auth.AuthenticationContext;
 import com.atlassian.bitbucket.permission.Permission;
