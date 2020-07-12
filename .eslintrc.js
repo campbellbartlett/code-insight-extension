@@ -24,6 +24,7 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'prettier/prettier': 'error',
         'react/jsx-boolean-value': 0,
+        'no-use-before-define': 'off',
         'react/jsx-filename-extension': 0,
         'react/jsx-fragments': ['error', 'syntax'],
         'react/jsx-max-depth': [1, { max: 4 }],
