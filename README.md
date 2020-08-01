@@ -1,7 +1,7 @@
 # Code Insights Extension for BitBucket Server
 
 ## Introduction
-With the release of BitBucket Server 7, repository administrators now have the ability to configure code compulsory
+With the release of BitBucket Server 7, repository administrators now have the ability to configure compulsory
 insight reports that must report their status before merging can take place. An administrator also has the ability
 to list which of these reports must pass.
 
@@ -17,7 +17,7 @@ Example of functionality in a GitHub pull request:
 
 Examples that spring to mind are issues in common libraries, that are medium severity and have no ETA on a fix. 
 If a second issue is found in a critical area of the codebase (say an exploit that allowed anyone to login as anyone else),
-the decision would probably be made to move ahead with the fix for the critical fix immediately instead of waiting for
+the decision would probably be made to move ahead with the merge to fix the critical bug immediately instead of waiting for
 the medium severity issue to be fixed.
 
 This extension adds the ability for a repository administrator to override a blocked merge in these situations.
