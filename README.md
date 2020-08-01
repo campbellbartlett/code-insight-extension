@@ -13,6 +13,7 @@ from the UI by using their admin privileges. This feature is important because s
 a risk that a product owner or chief engineer is willing to accept in order to resolve a different issue. 
 
 Example of functionality in a GitHub pull request:
+
 ![KNH6q](https://user-images.githubusercontent.com/38512252/86992345-a4cfaf80-c1e4-11ea-888e-cc3a190641dc.png)
 
 Examples that spring to mind are issues in common libraries, that are medium severity and have no ETA on a fix. 
