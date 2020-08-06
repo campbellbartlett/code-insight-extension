@@ -15,7 +15,7 @@ const { loaders } = require('./webpack.loaders');
 
 const clientsideExtensions = new ClientsideExtensionWebpackPlugin({
     cwd: FRONTEND_SRC_DIR,
-    pattern: 'extensions/**/*-extension.js*',
+    pattern: 'extensions/**/*-extension.ts*',
 });
 
 const watchConfig = {
@@ -82,7 +82,7 @@ module.exports = (env, argv = {}) => {
             },
 
             resolve: {
-                extensions: ['.js', '.jsx', 'tsx', 'ts'],
+                extensions: ['.js', '.jsx', '.tsx', '.ts'],
             },
 
             stats: {

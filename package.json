@@ -9,11 +9,17 @@
         "@atlaskit/status": "^0.9.23",
         "@atlassian/clientside-extensions": "1.0.0",
         "@atlassian/wrm-react-i18n": "0.4.5",
+        "@babel/preset-typescript": "^7.10.4",
+        "@types/jest": "^26.0.9",
+        "@types/node": "^14.0.27",
+        "@types/react": "^16.9.44",
+        "@types/react-dom": "^16.9.8",
         "prop-types": "^15.7.2",
         "react": "16.12.0",
         "react-admonitions": "^2.1.0",
         "react-dom": "16.12.0",
-        "styled-components": "3.4.10"
+        "styled-components": "3.4.10",
+        "typescript": "^3.9.7"
     },
     "devDependencies": {
         "@atlassian/clientside-extensions-webpack-plugin": "1.0.0",

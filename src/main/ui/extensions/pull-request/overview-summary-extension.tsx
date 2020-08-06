@@ -1,46 +1,19 @@
 import { ModalExtension, renderElementAsReact } from '@atlassian/clientside-extensions';
 import React, { useState, useEffect } from 'react';
+import { Context, PluginAPI } from '@atlassian/clientside-extensions-registry/lib/types';
 import { AdminOverrideStatus } from './admin-override-status';
-import { ReportStatus } from './report-status';
+import { ReportStatus } from './report-status/report-status';
 import { OverviewAdmonition } from './overview-admonition';
+import { PullRequestInsightsContext } from './PullRequestInsightsContext';
+import getCodeInsightExtensionsContext from './insight-context-api/get-insight-context';
+import toggleAdminOverride from './insight-context-api/toggle-admin-override';
 
-const getFetchOptions = methodType => ({
-    method: methodType,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-const getPullRequestInsightExtensionsContextUri = context => {
-    if (!context) {
-        // eslint-disable-next-line no-console
-        console.error('Context is required');
-        return '';
-    }
-
-    const projectKey = context.project.key;
-    const repoSlug = context.repository.slug;
-    const commitHash = context.pullRequest.fromRef.latestCommit;
-
-    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/context`;
-};
-
-function putPullRequestAdminOverrideUri(context, loaded, insightsContext) {
-    if (!context) {
-        // eslint-disable-next-line no-console
-        console.error('Context is required');
-        return '';
-    }
-
-    const projectKey = context.project.key;
-    const repoSlug = context.repository.slug;
-    const commitHash = context.pullRequest.fromRef.latestCommit;
-    const revoke = loaded && insightsContext.adminOverride ? 'true' : 'false';
-
-    return `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/override?revoke=${revoke}`;
-}
-
-const createMainButton = (isOverridden, loaded, userAdmin, onOverride) => ({
+const createMainButton = (
+    isOverridden: boolean,
+    loaded: boolean,
+    userAdmin: boolean,
+    onOverride: () => void
+) => ({
     text: isOverridden ? 'Disable merge override' : 'Enable merging',
     onClick: () => {
         onOverride();
@@ -48,7 +21,7 @@ const createMainButton = (isOverridden, loaded, userAdmin, onOverride) => ({
     isDisabled: loaded && !userAdmin,
 });
 
-const createCloseButton = (modalApi, updated) => ({
+const createCloseButton = (modalApi: ModalExtension.Api, updated: boolean) => ({
     text: 'Close',
     onClick: () => {
         modalApi.closeModal();
@@ -59,7 +32,7 @@ const createCloseButton = (modalApi, updated) => ({
     },
 });
 
-const getAppearance = (loaded, adminOverride) =>
+const getAppearance = (loaded: boolean, adminOverride: boolean) =>
     loaded && adminOverride ? ModalExtension.Appearance.warning : ModalExtension.Appearance.danger;
 
 // Export default required for Atlassian Client Side Extensions to be discovered.
@@ -69,31 +42,39 @@ const getAppearance = (loaded, adminOverride) =>
  *
  * @extension-point bitbucket.ui.pullrequest.overview.summary
  */
-export default ModalExtension.factory((api, context) => {
+export default ModalExtension.factory((api: PluginAPI, context: Context<{}>) => {
     return {
         label: `Code Insight Extension`,
-        onAction(modalApi) {
+        onAction: async (modalApi: ModalExtension.Api) => {
             modalApi.setTitle('Code Insights Extension').setWidth(ModalExtension.Width.large);
 
             const ModalComponent = () => {
                 const [loaded, setLoaded] = useState(false);
                 const [updated, setUpdated] = useState(false);
-                const [insightsContext, setInsightsContext] = useState({});
+                const [
+                    insightsContext,
+                    setInsightsContext,
+                ] = useState<PullRequestInsightsContext | null>(null);
 
                 useEffect(() => {
                     setActionButtons();
-                    getCodeInsightExtensionsContext();
+                    getCodeInsightExtensionsContext(context).then(
+                        (codeInsightContext: PullRequestInsightsContext) => {
+                            setInsightsContext(codeInsightContext);
+                            setLoaded(true);
+                            setActionButtons();
+                        }
+                    );
                 });
 
                 const getOnMainClick = () => {
-                    return () => {
-                        fetch(
-                            putPullRequestAdminOverrideUri(context, loaded, insightsContext),
-                            getFetchOptions('PUT')
-                        ).then(() => {
-                            getCodeInsightExtensionsContext();
-                            setUpdated(true);
-                        });
+                    return async () => {
+                        await toggleAdminOverride(context, loaded, insightsContext);
+                        const codeInsightContext = await getCodeInsightExtensionsContext(context);
+                        setInsightsContext(codeInsightContext);
+                        setLoaded(true);
+                        setUpdated(true);
+                        setActionButtons();
                     };
                 };
 
@@ -113,32 +94,21 @@ export default ModalExtension.factory((api, context) => {
                     modalApi.setActions([mainButton, closeButton]);
                 };
 
-                const getCodeInsightExtensionsContext = () => {
-                    fetch(
-                        getPullRequestInsightExtensionsContextUri(context),
-                        getFetchOptions('GET')
-                    )
-                        .then(res => res.json())
-                        .then(res => {
-                            setInsightsContext(res);
-                            setLoaded(true);
-                            setActionButtons();
-                        });
-                };
-
                 return (
                     <div data-testid="modal-with-action-callback">
-                        {loaded && (
+                        {insightsContext && (
                             <AdminOverrideStatus
                                 isOverride={
                                     insightsContext.userAdmin && insightsContext.adminOverride
                                 }
                             />
                         )}
-                        {loaded && (
+                        {insightsContext && (
                             <ReportStatus codeInsightReports={insightsContext.codeInsightReports} />
                         )}
-                        {loaded && <OverviewAdmonition userAdmin={insightsContext.userAdmin} />}
+                        {insightsContext && (
+                            <OverviewAdmonition userAdmin={insightsContext.userAdmin} />
+                        )}
                     </div>
                 );
             };

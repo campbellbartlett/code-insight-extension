@@ -5,9 +5,12 @@ const { I18N_FILES } = require('./webpack.constants');
 function getLoaders({ isProductionEnv = false }) {
     return [
         {
-            test: /\.jsx?$/,
+            test: /\.tsx?$/,
             exclude: /node_modules/,
             use: [
+                {
+                    loader: 'babel-loader',
+                },
                 {
                     loader: '@atlassian/i18n-properties-loader',
                     options: {
@@ -15,20 +18,7 @@ function getLoaders({ isProductionEnv = false }) {
                         disabled: isProductionEnv,
                     },
                 },
-                {
-                    loader: 'babel-loader',
-                    options: {
-                        cacheDirectory: true,
-                    },
-                },
             ],
-        },
-        {
-            test: /\.tsx?$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-            },
         },
         {
             test: /\.less$/,
