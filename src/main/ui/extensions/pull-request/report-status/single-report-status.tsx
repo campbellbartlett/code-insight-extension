@@ -28,7 +28,7 @@ const SingleReportStatus: React.FC<SingleReportProps> = (props: SingleReportProp
     }
     return (
         <div style={SingleReportStyle}>
-            {report.name} {icon}
+            <span id="report-name">{report.name}</span> {icon}
         </div>
     );
 };

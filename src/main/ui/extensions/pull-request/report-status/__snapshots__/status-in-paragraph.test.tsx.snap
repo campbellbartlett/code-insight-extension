@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`status in paragraph renders correctly should match snapshot 1`] = `
+<div
+  style={
+    Object {
+      "width": "4em",
+    }
+  }
+>
+  <WithAnalyticsEvents(StatusInternal)
+    color="red"
+    text="Test Status"
+  />
+</div>
+`;

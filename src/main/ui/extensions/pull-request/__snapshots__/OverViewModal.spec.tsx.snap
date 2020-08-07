@@ -1,0 +1,634 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OverView modal renders correctly should render correctly 1`] = `
+<OverviewModal
+  context={
+    Object {
+      "project": Object {
+        "key": "projectKey",
+      },
+      "pullRequest": Object {
+        "fromRef": Object {
+          "latestCommit": "commitHash",
+        },
+      },
+      "repository": Object {
+        "slug": "repoSlug",
+      },
+    }
+  }
+  createCloseButton={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          false,
+        ],
+        Array [
+          false,
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  setActions={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Array [
+            Object {
+              "isDisabled": false,
+              "onClick": [Function],
+              "text": "Enable merging",
+            },
+            undefined,
+          ],
+        ],
+        Array [
+          Array [
+            Object {
+              "isDisabled": false,
+              "onClick": [Function],
+              "text": "Enable merging",
+            },
+            undefined,
+          ],
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  setIsOverride={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          false,
+        ],
+        Array [
+          false,
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <div
+    id="modal-div"
+  >
+    <AdminOverrideStatus
+      isOverride={false}
+    >
+      <div
+        id="admin-override-status"
+      >
+        <h3
+          id="standard-message"
+        >
+          This Pull Request cannot be merged until all code insight quality reports have passed.
+        </h3>
+      </div>
+    </AdminOverrideStatus>
+    <ReportStatus
+      codeInsightReports={
+        Array [
+          Object {
+            "name": "integrationtests",
+            "status": "FAIL",
+          },
+          Object {
+            "name": "blackduck",
+            "status": "FAIL",
+          },
+          Object {
+            "name": "sonar",
+            "status": "PASS",
+          },
+        ]
+      }
+    >
+      <div
+        id="report-status"
+        style={
+          Object {
+            "marginBottom": "1em",
+            "marginTop": "1em",
+          }
+        }
+      >
+        <ul
+          style={
+            Object {
+              "listStyleType": "none",
+            }
+          }
+        >
+          <li
+            id="integrationtests"
+            key="integrationtests"
+          >
+            <SingleReportStatus
+              report={
+                Object {
+                  "name": "integrationtests",
+                  "status": "FAIL",
+                }
+              }
+            >
+              <div
+                style={
+                  Object {
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "width": "10rem",
+                  }
+                }
+              >
+                <span
+                  id="report-name"
+                >
+                  integrationtests
+                </span>
+                 
+                <FailedStatus>
+                  <StatusInParagraph
+                    color="red"
+                    text="Failed"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "width": "4em",
+                        }
+                      }
+                    >
+                      <WithAnalyticsEvents(StatusInternal)
+                        color="red"
+                        text="Failed"
+                      >
+                        <AnalyticsContextConsumer
+                          createEventMap={
+                            Object {
+                              "onClick": [Function],
+                              "onHover": [Function],
+                            }
+                          }
+                          wrappedComponentProps={
+                            Object {
+                              "color": "red",
+                              "text": "Failed",
+                            }
+                          }
+                        >
+                          <StatusInternal
+                            color="red"
+                            createAnalyticsEvent={[Function]}
+                            onClick={[Function]}
+                            onHover={[Function]}
+                            text="Failed"
+                          >
+                            <span
+                              className="status-lozenge-span"
+                              data-color="red"
+                              data-node-type="status"
+                              onClick={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              title="Failed"
+                            >
+                              <Lozenge
+                                appearance="removed"
+                                isBold={false}
+                                maxWidth={200}
+                              >
+                                <Provider>
+                                  <Consumer
+                                    appearance="removed"
+                                    isBold={false}
+                                    maxWidth={200}
+                                  >
+                                    <Component
+                                      backgroundColor="#FFEBE6"
+                                      maxWidth={200}
+                                      textColor="#BF2600"
+                                    >
+                                      <EmotionCssPropInternal
+                                        __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                        __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                        css={
+                                          Object {
+                                            "backgroundColor": "#FFEBE6",
+                                            "borderRadius": "3px",
+                                            "boxSizing": "border-box",
+                                            "color": "#BF2600",
+                                            "display": "inline-block",
+                                            "fontSize": "11px",
+                                            "fontWeight": 700,
+                                            "lineHeight": 1,
+                                            "maxWidth": "100%",
+                                            "padding": "2px 0 3px 0",
+                                            "textTransform": "uppercase",
+                                            "verticalAlign": "baseline",
+                                          }
+                                        }
+                                      >
+                                        <span
+                                          className="css-abx768-Component"
+                                        >
+                                          <Component
+                                            backgroundColor="#FFEBE6"
+                                            maxWidth={200}
+                                            textColor="#BF2600"
+                                          >
+                                            <EmotionCssPropInternal
+                                              __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                              __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                              css={
+                                                Object {
+                                                  "boxSizing": "border-box",
+                                                  "display": "inline-block",
+                                                  "maxWidth": "200px",
+                                                  "overflow": "hidden",
+                                                  "padding": "0 4px",
+                                                  "textOverflow": "ellipsis",
+                                                  "verticalAlign": "top",
+                                                  "whiteSpace": "nowrap",
+                                                  "width": "100%",
+                                                }
+                                              }
+                                            >
+                                              <span
+                                                className="css-19vb09t-Component"
+                                              >
+                                                Failed
+                                              </span>
+                                            </EmotionCssPropInternal>
+                                          </Component>
+                                        </span>
+                                      </EmotionCssPropInternal>
+                                    </Component>
+                                  </Consumer>
+                                </Provider>
+                              </Lozenge>
+                            </span>
+                          </StatusInternal>
+                        </AnalyticsContextConsumer>
+                      </WithAnalyticsEvents(StatusInternal)>
+                    </div>
+                  </StatusInParagraph>
+                </FailedStatus>
+              </div>
+            </SingleReportStatus>
+          </li>
+          <li
+            id="blackduck"
+            key="blackduck"
+          >
+            <SingleReportStatus
+              report={
+                Object {
+                  "name": "blackduck",
+                  "status": "FAIL",
+                }
+              }
+            >
+              <div
+                style={
+                  Object {
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "width": "10rem",
+                  }
+                }
+              >
+                <span
+                  id="report-name"
+                >
+                  blackduck
+                </span>
+                 
+                <FailedStatus>
+                  <StatusInParagraph
+                    color="red"
+                    text="Failed"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "width": "4em",
+                        }
+                      }
+                    >
+                      <WithAnalyticsEvents(StatusInternal)
+                        color="red"
+                        text="Failed"
+                      >
+                        <AnalyticsContextConsumer
+                          createEventMap={
+                            Object {
+                              "onClick": [Function],
+                              "onHover": [Function],
+                            }
+                          }
+                          wrappedComponentProps={
+                            Object {
+                              "color": "red",
+                              "text": "Failed",
+                            }
+                          }
+                        >
+                          <StatusInternal
+                            color="red"
+                            createAnalyticsEvent={[Function]}
+                            onClick={[Function]}
+                            onHover={[Function]}
+                            text="Failed"
+                          >
+                            <span
+                              className="status-lozenge-span"
+                              data-color="red"
+                              data-node-type="status"
+                              onClick={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              title="Failed"
+                            >
+                              <Lozenge
+                                appearance="removed"
+                                isBold={false}
+                                maxWidth={200}
+                              >
+                                <Provider>
+                                  <Consumer
+                                    appearance="removed"
+                                    isBold={false}
+                                    maxWidth={200}
+                                  >
+                                    <Component
+                                      backgroundColor="#FFEBE6"
+                                      maxWidth={200}
+                                      textColor="#BF2600"
+                                    >
+                                      <EmotionCssPropInternal
+                                        __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                        __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                        css={
+                                          Object {
+                                            "backgroundColor": "#FFEBE6",
+                                            "borderRadius": "3px",
+                                            "boxSizing": "border-box",
+                                            "color": "#BF2600",
+                                            "display": "inline-block",
+                                            "fontSize": "11px",
+                                            "fontWeight": 700,
+                                            "lineHeight": 1,
+                                            "maxWidth": "100%",
+                                            "padding": "2px 0 3px 0",
+                                            "textTransform": "uppercase",
+                                            "verticalAlign": "baseline",
+                                          }
+                                        }
+                                      >
+                                        <span
+                                          className="css-abx768-Component"
+                                        >
+                                          <Component
+                                            backgroundColor="#FFEBE6"
+                                            maxWidth={200}
+                                            textColor="#BF2600"
+                                          >
+                                            <EmotionCssPropInternal
+                                              __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                              __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                              css={
+                                                Object {
+                                                  "boxSizing": "border-box",
+                                                  "display": "inline-block",
+                                                  "maxWidth": "200px",
+                                                  "overflow": "hidden",
+                                                  "padding": "0 4px",
+                                                  "textOverflow": "ellipsis",
+                                                  "verticalAlign": "top",
+                                                  "whiteSpace": "nowrap",
+                                                  "width": "100%",
+                                                }
+                                              }
+                                            >
+                                              <span
+                                                className="css-19vb09t-Component"
+                                              >
+                                                Failed
+                                              </span>
+                                            </EmotionCssPropInternal>
+                                          </Component>
+                                        </span>
+                                      </EmotionCssPropInternal>
+                                    </Component>
+                                  </Consumer>
+                                </Provider>
+                              </Lozenge>
+                            </span>
+                          </StatusInternal>
+                        </AnalyticsContextConsumer>
+                      </WithAnalyticsEvents(StatusInternal)>
+                    </div>
+                  </StatusInParagraph>
+                </FailedStatus>
+              </div>
+            </SingleReportStatus>
+          </li>
+          <li
+            id="sonar"
+            key="sonar"
+          >
+            <SingleReportStatus
+              report={
+                Object {
+                  "name": "sonar",
+                  "status": "PASS",
+                }
+              }
+            >
+              <div
+                style={
+                  Object {
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "width": "10rem",
+                  }
+                }
+              >
+                <span
+                  id="report-name"
+                >
+                  sonar
+                </span>
+                 
+                <PassedStatus>
+                  <StatusInParagraph
+                    color="green"
+                    text="Passed"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "width": "4em",
+                        }
+                      }
+                    >
+                      <WithAnalyticsEvents(StatusInternal)
+                        color="green"
+                        text="Passed"
+                      >
+                        <AnalyticsContextConsumer
+                          createEventMap={
+                            Object {
+                              "onClick": [Function],
+                              "onHover": [Function],
+                            }
+                          }
+                          wrappedComponentProps={
+                            Object {
+                              "color": "green",
+                              "text": "Passed",
+                            }
+                          }
+                        >
+                          <StatusInternal
+                            color="green"
+                            createAnalyticsEvent={[Function]}
+                            onClick={[Function]}
+                            onHover={[Function]}
+                            text="Passed"
+                          >
+                            <span
+                              className="status-lozenge-span"
+                              data-color="green"
+                              data-node-type="status"
+                              onClick={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              title="Passed"
+                            >
+                              <Lozenge
+                                appearance="success"
+                                isBold={false}
+                                maxWidth={200}
+                              >
+                                <Provider>
+                                  <Consumer
+                                    appearance="success"
+                                    isBold={false}
+                                    maxWidth={200}
+                                  >
+                                    <Component
+                                      backgroundColor="#E3FCEF"
+                                      maxWidth={200}
+                                      textColor="#006644"
+                                    >
+                                      <EmotionCssPropInternal
+                                        __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                        __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                        css={
+                                          Object {
+                                            "backgroundColor": "#E3FCEF",
+                                            "borderRadius": "3px",
+                                            "boxSizing": "border-box",
+                                            "color": "#006644",
+                                            "display": "inline-block",
+                                            "fontSize": "11px",
+                                            "fontWeight": 700,
+                                            "lineHeight": 1,
+                                            "maxWidth": "100%",
+                                            "padding": "2px 0 3px 0",
+                                            "textTransform": "uppercase",
+                                            "verticalAlign": "baseline",
+                                          }
+                                        }
+                                      >
+                                        <span
+                                          className="css-1d02ga6-Component"
+                                        >
+                                          <Component
+                                            backgroundColor="#E3FCEF"
+                                            maxWidth={200}
+                                            textColor="#006644"
+                                          >
+                                            <EmotionCssPropInternal
+                                              __EMOTION_LABEL_PLEASE_DO_NOT_USE__="Component"
+                                              __EMOTION_TYPE_PLEASE_DO_NOT_USE__="span"
+                                              css={
+                                                Object {
+                                                  "boxSizing": "border-box",
+                                                  "display": "inline-block",
+                                                  "maxWidth": "200px",
+                                                  "overflow": "hidden",
+                                                  "padding": "0 4px",
+                                                  "textOverflow": "ellipsis",
+                                                  "verticalAlign": "top",
+                                                  "whiteSpace": "nowrap",
+                                                  "width": "100%",
+                                                }
+                                              }
+                                            >
+                                              <span
+                                                className="css-19vb09t-Component"
+                                              >
+                                                Passed
+                                              </span>
+                                            </EmotionCssPropInternal>
+                                          </Component>
+                                        </span>
+                                      </EmotionCssPropInternal>
+                                    </Component>
+                                  </Consumer>
+                                </Provider>
+                              </Lozenge>
+                            </span>
+                          </StatusInternal>
+                        </AnalyticsContextConsumer>
+                      </WithAnalyticsEvents(StatusInternal)>
+                    </div>
+                  </StatusInParagraph>
+                </PassedStatus>
+              </div>
+            </SingleReportStatus>
+          </li>
+        </ul>
+      </div>
+    </ReportStatus>
+    <OverviewAdmonition
+      userAdmin={false}
+    >
+      <div
+        id="overview-admonition"
+      />
+    </OverviewAdmonition>
+  </div>
+</OverviewModal>
+`;

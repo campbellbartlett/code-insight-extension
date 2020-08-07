@@ -10,7 +10,7 @@ export const OverviewAdmonition: React.FC<OverviewAdmonitionProps> = (
 ) => {
     const { userAdmin } = props;
     return (
-        <div>
+        <div id="overview-admonition">
             {userAdmin && (
                 <Admonition type="tip">
                     As an administrator of this repository you can enable merging of this pull

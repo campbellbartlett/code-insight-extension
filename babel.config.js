@@ -3,7 +3,15 @@ module.exports = api => {
     const testOnly = (entry, defaultValue = {}) => (isTest ? entry : defaultValue);
     return {
         presets: [
-            ['@babel/preset-env', { modules: testOnly('commonjs', false) }],
+            [
+                '@babel/preset-env',
+                {
+                    modules: testOnly('commonjs', false),
+                    targets: {
+                        node: 'current',
+                    },
+                },
+            ],
             '@babel/preset-typescript',
             '@babel/preset-react',
         ],

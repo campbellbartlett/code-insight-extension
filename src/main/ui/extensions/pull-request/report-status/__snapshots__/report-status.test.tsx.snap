@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`report status component shows correct data should render correctly 1`] = `
+<div
+  id="report-status"
+  style={
+    Object {
+      "marginBottom": "1em",
+      "marginTop": "1em",
+    }
+  }
+>
+  <ul
+    style={
+      Object {
+        "listStyleType": "none",
+      }
+    }
+  >
+    <li
+      id="Report1"
+      key="Report1"
+    >
+      <SingleReportStatus
+        report={
+          Object {
+            "name": "Report 1",
+            "status": "PASS",
+          }
+        }
+      />
+    </li>
+    <li
+      id="Report2"
+      key="Report2"
+    >
+      <SingleReportStatus
+        report={
+          Object {
+            "name": "Report 2",
+            "status": "FAIL",
+          }
+        }
+      />
+    </li>
+    <li
+      id="Report3"
+      key="Report3"
+    >
+      <SingleReportStatus
+        report={
+          Object {
+            "name": "Report 3",
+            "status": "WAITING",
+          }
+        }
+      />
+    </li>
+  </ul>
+</div>
+`;

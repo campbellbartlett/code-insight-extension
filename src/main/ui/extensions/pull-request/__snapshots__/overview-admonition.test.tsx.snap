@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`overview admonition renders correctly should render correctly 1`] = `
+<div
+  id="overview-admonition"
+>
+  <Admonition
+    type="tip"
+  >
+    As an administrator of this repository you can enable merging of this pull request before all code insight quality reports have passed.
+  </Admonition>
+</div>
+`;

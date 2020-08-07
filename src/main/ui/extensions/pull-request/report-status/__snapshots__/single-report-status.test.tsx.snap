@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single report status shows correct data should match snapshot 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "justifyContent": "space-between",
+      "width": "10rem",
+    }
+  }
+>
+  <span
+    id="report-name"
+  >
+    Test Report
+  </span>
+   
+  <PassedStatus />
+</div>
+`;
