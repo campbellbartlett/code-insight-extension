@@ -31,7 +31,7 @@ public class RepositoryResolveService {
         Repository repository = repositoryService.getBySlug(projectId, slug);
 
         if (repository == null) {
-            throw new RepositoryNotFoundException(MessageFormat.format("Repository not found with projectId [{}] and slug [{}]", projectId, slug));
+            throw new RepositoryNotFoundException(MessageFormat.format("Repository not found with projectId [{0}] and slug [{1}]", projectId, slug));
         }
 
         PullRequestSearchRequest prSearchRequest = new PullRequestSearchRequest.Builder()
@@ -42,6 +42,6 @@ public class RepositoryResolveService {
                 .stream()
                 .filter(pr -> pr.getFromRef().getLatestCommit().equals(commitHash))
                 .findFirst()
-                .orElseThrow(() -> new PullRequestNotFoundException(MessageFormat.format("PullRequest not found for repository with projectId [{}] and slug [{}] and commitHash [{}]", projectId, slug, commitHash)));
+                .orElseThrow(() -> new PullRequestNotFoundException(MessageFormat.format("PullRequest not found for repository with projectId [{0}] and slug [{1}] and commitHash [{2}]", projectId, slug, commitHash)));
     }
 }
