@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ModalAction } from '@atlassian/clientside-extensions-components/lib/handlers/ModalHandler';
 import { Context } from '@atlassian/clientside-extensions-registry/lib/types';
 import { PullRequestInsightsContext } from './PullRequestInsightsContext';
@@ -30,45 +30,37 @@ type ModalComponentProps = {
 
 const OverviewModal: React.FC<ModalComponentProps> = (props: ModalComponentProps) => {
     const { context, setActions, createCloseButton, setIsOverride } = props;
-    const [loaded, setLoaded] = useState(false);
-    const [updated, setUpdated] = useState(false);
     const [insightsContext, setInsightsContext] = useState<PullRequestInsightsContext | null>(null);
 
     useEffect(() => {
-        setActionButtons();
         getCodeInsightExtensionsContext(context).then(
             (codeInsightContext: PullRequestInsightsContext) => {
                 setInsightsContext(codeInsightContext);
-                setLoaded(true);
-                setActionButtons();
+                setActionButtons(true, codeInsightContext, false);
             }
         );
     }, [context]);
 
-    const getOnMainClick = () => {
-        return async () => {
-            await toggleAdminOverride(context, loaded, insightsContext);
-            const codeInsightContext = await getCodeInsightExtensionsContext(context);
-            setInsightsContext(codeInsightContext);
-            setLoaded(true);
-            setUpdated(true);
-            setActionButtons();
-        };
-    };
-
-    const setActionButtons = () => {
-        const onMainClick = getOnMainClick();
-        const isOverridden = loaded && insightsContext && insightsContext.adminOverride;
-        const mainButton = createMainButton(
-            isOverridden,
-            loaded,
-            loaded && insightsContext && insightsContext.userAdmin,
-            onMainClick
-        );
-        const closeButton = createCloseButton(updated);
-        setIsOverride(loaded && insightsContext && insightsContext.adminOverride);
-        setActions([mainButton, closeButton]);
-    };
+    const setActionButtons = useCallback(
+        (isLoaded: boolean, insightContext: PullRequestInsightsContext, isUpdated: boolean) => {
+            const isOverridden = insightContext && insightContext.adminOverride;
+            const mainButton = createMainButton(
+                isOverridden,
+                isLoaded,
+                isLoaded && insightContext && insightContext.userAdmin,
+                async () => {
+                    await toggleAdminOverride(context, insightContext);
+                    const codeInsightContext = await getCodeInsightExtensionsContext(context);
+                    setInsightsContext(codeInsightContext);
+                    setActionButtons(true, codeInsightContext, true);
+                }
+            );
+            const closeButton = createCloseButton(isUpdated);
+            setIsOverride(isLoaded && insightContext && insightContext.adminOverride);
+            setActions([mainButton, closeButton]);
+        },
+        [setIsOverride, setActions]
+    );
 
     return (
         <div id="modal-div">

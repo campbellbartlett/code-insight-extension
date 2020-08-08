@@ -4,7 +4,6 @@ import getFetchOptions from './get-fetch-options';
 
 const toggleAdminOverride = async (
     context: Context<{}>,
-    loaded: boolean,
     insightsContext: PullRequestInsightsContext
 ) => {
     if (!context) {
@@ -16,9 +15,9 @@ const toggleAdminOverride = async (
     const projectKey = context.project.key;
     const repoSlug = context.repository.slug;
     const commitHash = context.pullRequest.fromRef.latestCommit;
-    const revoke = loaded && insightsContext.adminOverride ? 'true' : 'false';
+    const revoke = insightsContext && insightsContext.adminOverride ? 'true' : 'false';
 
-    fetch(
+    await fetch(
         `/rest/code-insight-extension/1.0/pullRequest/${projectKey}/${repoSlug}/${commitHash}/override?revoke=${revoke}`,
         getFetchOptions('PUT')
     );

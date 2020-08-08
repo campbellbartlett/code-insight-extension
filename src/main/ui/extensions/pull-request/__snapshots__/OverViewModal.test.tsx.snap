@@ -23,18 +23,11 @@ exports[`OverView modal renders correctly should render correctly 1`] = `
         Array [
           false,
         ],
-        Array [
-          false,
-        ],
       ],
       "results": Array [
         Object {
           "type": "return",
-          "value": undefined,
-        },
-        Object {
-          "type": "return",
-          "value": undefined,
+          "value": false,
         },
       ],
     }
@@ -45,29 +38,15 @@ exports[`OverView modal renders correctly should render correctly 1`] = `
         Array [
           Array [
             Object {
-              "isDisabled": false,
+              "isDisabled": true,
               "onClick": [Function],
               "text": "Enable merging",
             },
-            undefined,
-          ],
-        ],
-        Array [
-          Array [
-            Object {
-              "isDisabled": false,
-              "onClick": [Function],
-              "text": "Enable merging",
-            },
-            undefined,
+            false,
           ],
         ],
       ],
       "results": Array [
-        Object {
-          "type": "return",
-          "value": undefined,
-        },
         Object {
           "type": "return",
           "value": undefined,
@@ -81,15 +60,8 @@ exports[`OverView modal renders correctly should render correctly 1`] = `
         Array [
           false,
         ],
-        Array [
-          false,
-        ],
       ],
       "results": Array [
-        Object {
-          "type": "return",
-          "value": undefined,
-        },
         Object {
           "type": "return",
           "value": undefined,
