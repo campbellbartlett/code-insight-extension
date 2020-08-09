@@ -10,7 +10,6 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,7 @@ public class InsightReportStatusService {
         while (isNotLastPage(insightReportPage)) {
             pageFrom = pageFrom + PAGE_SIZE;
             insightReportPage = getPageOfInsightReports(pullRequest, pageFrom);
-            insightReports.addAll(new ArrayList<>(insightReports));
+            insightReports.addAll(insightReportPage.stream().collect(Collectors.toSet()));
         }
 
         return insightReports;

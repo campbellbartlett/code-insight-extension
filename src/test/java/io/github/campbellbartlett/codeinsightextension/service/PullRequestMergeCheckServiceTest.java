@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
@@ -24,7 +23,8 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PullRequestMergeCheckServiceTest {
@@ -55,15 +55,6 @@ public class PullRequestMergeCheckServiceTest {
 
     @Before
     public void setUp() {
-        Mockito.reset(
-                adminRiskAcceptedService,
-                insightPullRequestContextService,
-                context,
-                mockPullRequest,
-                mockMergeHookRequest,
-                mockRepository
-        );
-
         // Create a mock merge hook request, that contains a mock repository,
         // that contains a pull request, that contains a mock pull request ref
         when(mockMergeHookRequest.getPullRequest()).thenReturn(mockPullRequest);

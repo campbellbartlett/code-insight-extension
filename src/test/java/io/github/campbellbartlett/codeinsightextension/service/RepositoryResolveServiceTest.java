@@ -8,12 +8,10 @@ import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.util.Page;
 import io.github.campbellbartlett.codeinsightextension.rest.exeption.PullRequestNotFoundException;
 import io.github.campbellbartlett.codeinsightextension.rest.exeption.RepositoryNotFoundException;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.github.campbellbartlett.codeinsightextension.util.PageTestUtils.getEmptyPage;
-import static io.github.campbellbartlett.codeinsightextension.util.PageTestUtils.getPageWithItems;
+import static io.github.campbellbartlett.codeinsightextension.util.PageTestUtils.getLastPageWithItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,11 +36,6 @@ public class RepositoryResolveServiceTest {
 
     @InjectMocks
     private RepositoryResolveService repositoryResolveService;
-
-    @Before
-    public void setUp() {
-        Mockito.reset(repositoryService, pullRequestService);
-    }
 
     @Test(expected = RepositoryNotFoundException.class)
     public void unknownRepositoryTest() {
@@ -83,7 +76,7 @@ public class RepositoryResolveServiceTest {
 
         // Setup the pull request service to return a page including the pullRequestWithWrongHash
         List<PullRequest> pullRequests = Collections.singletonList(pullRequestWithWrongHash);
-        Page<PullRequest> pageOfPullRequests = getPageWithItems(pullRequests);
+        Page<PullRequest> pageOfPullRequests = getLastPageWithItems(pullRequests);
         when(pullRequestService.search(any(), any())).thenReturn(pageOfPullRequests);
 
         // Expect this method to throw PullRequestNotFound exception
@@ -106,7 +99,7 @@ public class RepositoryResolveServiceTest {
 
         // Setup the pull request service to return a page including the pull request
         List<PullRequest> pullRequests = Collections.singletonList(mockPullRequest);
-        Page<PullRequest> pageOfPullRequests = getPageWithItems(pullRequests);
+        Page<PullRequest> pageOfPullRequests = getLastPageWithItems(pullRequests);
         when(pullRequestService.search(any(), any())).thenReturn(pageOfPullRequests);
 
         // Search for the pull request
@@ -142,7 +135,7 @@ public class RepositoryResolveServiceTest {
         List<PullRequest> pullRequests = new ArrayList<>();
         pullRequests.add(correctPullRequest);
         pullRequests.add(wrongPullRequest);
-        Page<PullRequest> pageOfPullRequests = getPageWithItems(pullRequests);
+        Page<PullRequest> pageOfPullRequests = getLastPageWithItems(pullRequests);
         when(pullRequestService.search(any(), any())).thenReturn(pageOfPullRequests);
 
         // Request pull request with commit hash baz
